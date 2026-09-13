@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu Simulasi Rangkaian Adder</title>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, sans-serif; background: #f4f7fb; color: #172033; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.container { max-width: 900px; width: 100%; padding: 24px; }
+h1 { text-align: center; margin: 0 0 8px; font-size: 32px; }
+.subtitle { text-align: center; color: #667085; margin-bottom: 32px; font-size: 16px; }
+.card { background: white; border-radius: 18px; padding: 40px; box-shadow: 0 8px 30px #00000012; }
+.nav-grid { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+.nav-item { 
+  flex: 1; 
+  min-width: 280px; 
+  padding: 30px 24px; 
+  border: 2px solid #dbe3ef; 
+  border-radius: 16px; 
+  text-decoration: none; 
+  color: inherit; 
+  transition: all 0.3s ease; 
+  background: #f8fafc; 
+  text-align: center; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+}
+.nav-item:hover { 
+  border-color: #2563eb; 
+  background: white; 
+  transform: translateY(-5px); 
+  box-shadow: 0 12px 24px #2563eb1a; 
+}
+.nav-icon { 
+  font-size: 54px; 
+  margin-bottom: 20px; 
+  background: #eff6ff; 
+  width: 100px; 
+  height: 100px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  border-radius: 50%; 
+}
+.nav-title { 
+  font-size: 24px; 
+  font-weight: 800; 
+  color: #2563eb; 
+  margin-bottom: 12px; 
+}
+.nav-desc { 
+  font-size: 15px; 
+  color: #667085; 
+  line-height: 1.6; 
+}
+@media(max-width: 600px) {
+  .card { padding: 24px 16px; }
+  .nav-grid { gap: 16px; }
+  .nav-item { padding: 24px 16px; min-width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⚡ Simulasi Rangkaian Digital</h1>
+  <div class="subtitle">Silakan pilih jenis simulasi rangkaian penjumlahan (Adder) yang ingin Anda pelajari.</div>
+
+  <div class="card">
+    <div class="nav-grid">
+      <a href="./half.html" class="nav-item">
+        <div class="nav-icon">🔢</div>
+        <div class="nav-title">Half Adder</div>
+        <div class="nav-desc">Rangkaian dasar untuk menjumlahkan 2 bit input (A dan B). Memiliki 2 output berupa SUM dan CARRY.</div>
+      </a>
+      
+      <a href="./full.html" class="nav-item">
+        <div class="nav-icon">🧮</div>
+        <div class="nav-title">Full Adder</div>
+        <div class="nav-desc">Rangkaian untuk menjumlahkan 3 bit input (A, B, dan Carry-in). Digunakan untuk perhitungan yang lebih kompleks.</div>
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

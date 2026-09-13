@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulasi Half Adder</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
+.container{max-width:1100px;margin:auto;padding:24px}
+h1{text-align:center;margin:0 0 8px}
+.subtitle{text-align:center;color:#667085;margin-bottom:22px}
+.card{background:white;border-radius:18px;padding:20px;box-shadow:0 8px 30px #00000012;margin-bottom:18px}
+.controls{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.switch{border:0;border-radius:14px;padding:15px 25px;font-size:18px;font-weight:bold;cursor:pointer;background:#e9eef5;transition:.2s}
+.switch.on{background:#2563eb;color:white;box-shadow:0 0 0 4px #2563eb22}
+.switch:hover{transform:translateY(-2px)}
+.badge{display:inline-block;min-width:42px;padding:7px 12px;border-radius:10px;text-align:center;font-weight:bold;background:#e9eef5}
+.badge.on{background:#16a34a;color:white}
+.outputs{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+.output{min-width:180px;text-align:center;padding:18px;border-radius:15px;background:#f8fafc;border:2px solid #dbe3ef}
+.output .value{font-size:42px;font-weight:800;margin-top:6px}
+.output.sum{border-color:#2563eb}
+.output.carry{border-color:#dc2626}
+.output.sum .value{color:#2563eb}
+.output.carry .value{color:#dc2626}
+.diagram{overflow:auto}
+svg{display:block;margin:auto;min-width:600px;width:100%;max-width:800px;height:auto}
+.wire{fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.off{stroke:#cbd5e1}
+.a.on{stroke:#2563eb}.b.on{stroke:#16a34a}
+.carry.on{stroke:#dc2626}.sum.on{stroke:#2563eb}
+.gate{fill:#fff;stroke:#475569;stroke-width:3}
+.gate.active{fill:#dcfce7;stroke:#16a34a}
+.xorgate.active{fill:#eff6ff;stroke:#2563eb}
+.text{font-size:17px;font-weight:bold;fill:#172033}
+.small{font-size:14px;fill:#667085}
+table{border-collapse:collapse;width:100%;font-size:15px;max-width:600px;margin:auto;}
+th,td{padding:9px;text-align:center;border-bottom:1px solid #e5e7eb}
+th{background:#eef2ff}
+.current{background:#dbeafe;font-weight:bold}
+.formula{text-align:center;font-size:18px;line-height:1.8}
+.reset{display:block;margin:12px auto 0;border:0;background:#475569;color:white;padding:10px 18px;border-radius:10px;cursor:pointer}
+@media(max-width:600px){.container{padding:12px}.card{padding:14px}.switch{padding:12px 18px}.formula{font-size:15px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⚡ Simulasi Half Adder</h1>
+  <div class="subtitle">Klik tombol A dan B untuk melihat rangkaian bekerja secara langsung.</div>
+
+  <div class="card">
+    <div class="controls">
+      <button class="switch" id="btnA" onclick="toggle(0)">A = <span class="badge" id="aVal">0</span></button>
+      <button class="switch" id="btnB" onclick="toggle(1)">B = <span class="badge" id="bVal">0</span></button>
+    </div>
+    <button class="reset" onclick="resetAll()">Reset ke 00</button>
+  </div>
+
+  <div class="card">
+    <h2 style="text-align:center">Rangkaian Half Adder</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 800 350">
+        <text x="50" y="100" class="text">A</text>
+        <text x="50" y="260" class="text">B</text>
+
+        <!-- XOR Gate for Sum -->
+        <path id="xor" class="gate xorgate" d="M300 45 Q385 125 300 205 Q340 125 300 45 Z"/>
+        <text x="312" y="132" class="text">XOR</text>
+        <path id="wsum" class="wire sum off" d="M385 125 H650"/>
+        <text x="670" y="130" class="text">SUM (S)</text>
+
+        <!-- AND Gate for Carry -->
+        <path id="and" class="gate" d="M300 220 L345 220 Q395 220 395 260 Q395 300 345 300 L300 300 Z"/>
+        <text x="320" y="265" class="text">AND</text>
+        <path id="wcarry" class="wire carry off" d="M395 260 H650"/>
+        <text x="670" y="265" class="text">CARRY</text>
+
+        <!-- Wires A and B to XOR -->
+        <path id="wa1" class="wire a off" d="M80 95 H300"/>
+        <path id="wb1" class="wire b off" d="M80 255 H170 V155 H300"/>
+
+        <!-- Wires A and B to AND -->
+        <path id="wa2" class="wire a off" d="M120 95 V240 H300"/>
+        <path id="wb2" class="wire b off" d="M140 255 V280 H300"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="outputs">
+      <div class="output sum"><div>SUM (S)</div><div class="value" id="sum">0</div></div>
+      <div class="output carry"><div>CARRY</div><div class="value" id="carry">0</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="text-align:center">Tabel Kebenaran</h2>
+    <table>
+      <thead><tr><th>A</th><th>B</th><th>SUM</th><th>CARRY</th></tr></thead>
+      <tbody id="truth"></tbody>
+    </table>
+  </div>
+
+  <div class="card formula">
+    <b>SUM</b> = A ⊕ B<br>
+    <b>CARRY</b> = A · B
+  </div>
+</div>
+
+<script>
+let bits=[0,0];
+
+function calc(){
+  const [A,B]=bits;
+  const S=A^B;
+  const Carry=A&B;
+
+  document.getElementById('sum').textContent=S;
+  document.getElementById('carry').textContent=Carry;
+  ['A','B'].forEach((x,i)=>{
+    document.getElementById(x.toLowerCase()+'Val').textContent=bits[i];
+    document.getElementById('btn'+x).classList.toggle('on',!!bits[i]);
+  });
+
+  const on=(id,v)=>document.getElementById(id).classList.toggle('on',!!v);
+  on('xor',S); on('and',Carry);
+
+  // wires
+  ['wa1','wa2'].forEach(id=>on(id,A));
+  ['wb1','wb2'].forEach(id=>on(id,B));
+  on('wcarry',Carry); on('wsum',S);
+
+  document.querySelectorAll('#truth tr').forEach(tr=>{
+    tr.classList.toggle('current',tr.dataset.bits===bits.join(''));
+  });
+}
+
+function toggle(i){bits[i]^=1;calc()}
+function resetAll(){bits=[0,0];calc()}
+
+const rows=[];
+for(let n=0;n<4;n++){
+  const A=(n>>1)&1,B=n&1;
+  const S=A^B, Carry=A&B;
+  rows.push(`<tr data-bits="${A}${B}"><td>${A}</td><td>${B}</td><td>${S}</td><td>${Carry}</td></tr>`);
+}
+document.getElementById('truth').innerHTML=rows.join('');
+calc();
+</script>
+</body>
+</html>
